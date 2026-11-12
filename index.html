@@ -363,25 +363,13 @@ th{background:#f9fafb;text-align:left;white-space:nowrap}
             <div class="col-6"><label>ข้อความท้ายใบเสร็จ / ใบแจ้งหนี้<textarea id="setDocNote"></textarea></label></div>
             <div class="col-3"><label>ระยะยืนราคา (วัน)<input type="number" id="setValidity" min="0"></label></div>
           </div>
+          <div style="margin-top:14px;border-top:1px solid #eee;padding-top:12px"><b>โลโก้บริษัท</b> <span class="muted small">แสดงบนเอกสารในแถวเดียวกับชื่อเอกสาร (ใบเสนอราคา ใบแจ้งหนี้ ใบวางบิล ใบเสร็จ)</span>
+            <div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin-top:8px"><img id="logoPrev" style="height:60px;display:none;border:1px solid #ddd;padding:4px;background:#fff"><div><input type="file" accept="image/*" onchange="logoPick(this)"> <button class="btn sm" onclick="logoClear()">ลบโลโก้</button></div><label style="font-weight:400">ความสูงบนเอกสาร (มม.) <input type="number" id="logoH" min="8" max="40" style="width:80px" onchange="logoSize()"></label></div>
+            <p class="muted small" style="margin-bottom:0">ขนาดที่แนะนำ: 600 × 600 px (โลโก้สี่เหลี่ยมจัตุรัส) หรือ 900 × 300 px (โลโก้แนวนอน) แบบ PNG พื้นโปร่งใส • แอปย่อให้ไม่เกิน 600 px และเล็กกว่า 70 KB อัตโนมัติ • บนกระดาษสูง 18 มม. (ปรับได้ 8–40) กว้างไม่เกิน 60 มม.</p></div>
           <div style="margin-top:14px"><button class="btn primary" onclick="saveSettings()">บันทึกการตั้งค่า</button></div>
         </div>
       </div>
 
-
-      <div class="page-extra card" id="lhCard" style="margin-top:14px">
-        <div class="section-title">หัวกระดาษ / ท้ายกระดาษ (รูปภาพ)</div>
-        <p class="muted small">อัปโหลดรูปที่ออกแบบไว้ (แนะนำกว้าง 2480 px) แอปจะย่อให้อัตโนมัติ ใช้กับใบเสนอราคา ใบแจ้งหนี้ ใบวางบิล ใบเสร็จ</p>
-        <div class="form-grid">
-          <div class="col-6"><label>รูปหัวกระดาษ<input type="file" accept="image/*" onchange="lhPick('lhHead',this)"></label><img id="lhHeadPrev" style="max-width:100%;display:none;border:1px solid #ddd;margin:6px 0"><button class="btn sm" onclick="lhClear('lhHead')">ลบรูปหัว</button></div>
-          <div class="col-6"><label>รูปท้ายกระดาษ (ถ้ามี)<input type="file" accept="image/*" onchange="lhPick('lhFoot',this)"></label><img id="lhFootPrev" style="max-width:100%;display:none;border:1px solid #ddd;margin:6px 0"><button class="btn sm" onclick="lhClear('lhFoot')">ลบรูปท้าย</button></div>
-          <div class="col-12"><b class="small">ใช้กับเอกสาร:</b>
-            <label style="display:inline-flex;gap:6px;align-items:center;font-weight:400;margin:0 14px"><input type="checkbox" id="lhT_QT" style="width:auto"> ใบเสนอราคา</label><label style="display:inline-flex;gap:6px;align-items:center;font-weight:400;margin-right:14px"><input type="checkbox" id="lhT_IV" style="width:auto"> ใบแจ้งหนี้</label><label style="display:inline-flex;gap:6px;align-items:center;font-weight:400;margin-right:14px"><input type="checkbox" id="lhT_BL" style="width:auto"> ใบวางบิล</label><label style="display:inline-flex;gap:6px;align-items:center;font-weight:400"><input type="checkbox" id="lhT_RE" style="width:auto"> ใบเสร็จ</label></div>
-          <div class="col-4"><label>แสดงที่<select id="lhPages"><option value="first">เฉพาะหน้าแรก</option><option value="all">ทุกหน้า</option></select></label></div>
-          <div class="col-4"><label>ระยะห่างจากรูป (มม.)<input type="number" id="lhGap" min="0" max="40"></label></div>
-          <div class="col-4"><label style="display:flex;gap:6px;align-items:center;font-weight:400;margin-top:22px"><input type="checkbox" id="lhHideCo" style="width:auto"> ซ่อนชื่อ/ที่อยู่บริษัทแบบตัวอักษร เมื่อมีรูปหัว</label></div>
-        </div>
-        <div style="margin-top:14px"><button class="btn primary" onclick="lhSave()">บันทึกหัวกระดาษ</button></div>
-      </div>
 
       <!-- BACKUP -->
       <div class="page" id="page-backup">
@@ -1633,7 +1621,7 @@ function printReport(){
 }
 
 function renderSettings(){
-  lhFill();const s=db.settings;['CompanyName','TaxId','Address','Phone','Email','Bank','Account','AccountName','QuoteNote','DocNote','Validity'].forEach(k=>{const e=document.getElementById('set'+k);if(e)e.value=s[k.charAt(0).toLowerCase()+k.slice(1)]??''});
+  logoFill();const s=db.settings;['CompanyName','TaxId','Address','Phone','Email','Bank','Account','AccountName','QuoteNote','DocNote','Validity'].forEach(k=>{const e=document.getElementById('set'+k);if(e)e.value=s[k.charAt(0).toLowerCase()+k.slice(1)]??''});
 }
 function saveSettings(){db.settings={...db.settings,companyName:v('setCompanyName'),taxId:v('setTaxId'),address:v('setAddress'),phone:v('setPhone'),email:v('setEmail'),bank:v('setBank'),account:v('setAccount'),accountName:v('setAccountName'),quoteNote:v('setQuoteNote'),docNote:v('setDocNote'),validity:Number(v('setValidity')||0)};saveDB();alert('บันทึกข้อมูลบริษัทแล้ว')}
 function renderStorage(){syncFill();
@@ -1732,7 +1720,7 @@ function printDocument(id){
   const rows=(d.items||[]).map((it,i)=>`<tr><td>${i+1}</td><td><b>${esc(it.description||'-')}</b>${it.detail?`<div style="white-space:pre-wrap;color:#555;margin-top:3px;font-size:11px">${esc(it.detail)}</div>`:''}</td><td style="text-align:right">${money(it.qty)}</td><td>${esc(it.unit)}</td><td style="text-align:right">${money(it.unitPrice)}</td><td style="text-align:right">${money(Number(it.qty)*Number(it.unitPrice))}</td></tr>`).join('');
   const wht=d.withholdingEnabled?Number(d.withholdingAmount||0):0;
   const bankInfo=(s.bank||s.account)?`<div class="box"><b>ช่องทางชำระเงิน</b><div style="margin-top:4px;font-size:13px">ธนาคาร ${esc(s.bank||'-')} • เลขบัญชี <b>${esc(s.account||'-')}</b>${(s.accountName||s.companyName)?` • ชื่อบัญชี ${esc(s.accountName||s.companyName)}`:''}</div></div>`:'';
-  const LH=lhParts(d.type);const html2=`<!doctype html><html><head><meta charset="utf-8"><title>${esc(d.no)}</title><style>
+  const logo=logoImg();const html2=`<!doctype html><html><head><meta charset="utf-8"><title>${esc(d.no)}</title><style>
   @page{size:A4;margin:12mm}*{box-sizing:border-box}body{font-family:Arial,Tahoma,sans-serif;color:#111;margin:0}
   .doc-print{min-height:273mm;display:flex;flex-direction:column}.doc-print-main{flex:0 0 auto}.doc-print-footer{margin-top:auto}
   h1,h2,p{margin:0 0 7px}.head{display:flex;justify-content:space-between;margin-bottom:25px}.muted{color:#666;font-size:12px}
@@ -1740,9 +1728,9 @@ function printDocument(id){
   th,td{border:1px solid #ccc;padding:7px;font-size:12px;vertical-align:top}th{background:#f3f4f6}
   .sum{margin-left:auto;width:340px;margin-top:12px}.line{display:flex;justify-content:space-between;padding:5px 0}
   .sign{display:flex;justify-content:space-between;margin-top:55px;text-align:center;page-break-inside:avoid}.sign>div{width:42%}
-  ${LH.css}</style></head><body>${LH.wrapOpen}<div class="doc-print">
+  </style></head><body><div class="doc-print">
   <div class="doc-print-main">
-  ${LH.h1}<div class="head">${LH.hideCo?'<div></div>':`<div><h2>${esc(s.companyName||'ชื่อกิจการ')}</h2><div class="muted">${esc(s.address||'')}</div><div class="muted">เลขผู้เสียภาษี: ${esc(s.taxId||'-')} • โทร ${esc(s.phone||'-')}</div></div>`}<div style="text-align:right"><h1>${documentTitle(d.type)}</h1><b>${esc(d.no)}</b><div class="muted">วันที่ ${esc(fmtDate(d.date))}</div></div></div>
+  <div class="head"><div style="display:flex;gap:12px;align-items:center">${logo}<div><h2>${esc(s.companyName||'ชื่อกิจการ')}</h2><div class="muted">${esc(s.address||'')}</div><div class="muted">เลขผู้เสียภาษี: ${esc(s.taxId||'-')} • โทร ${esc(s.phone||'-')}</div></div></div><div style="text-align:right"><h1>${documentTitle(d.type)}</h1><b>${esc(d.no)}</b><div class="muted">วันที่ ${esc(fmtDate(d.date))}</div></div></div>
   <div class="box"><b>ลูกค้า: ${esc(c.name||'-')}</b><div class="muted">${esc(c.address||'')} ${esc(c.branch||'')}</div><div class="muted">เลขผู้เสียภาษี: ${esc(c.taxId||'-')} • โทร ${esc(c.phone||'-')}</div></div>
   <table><thead><tr><th>#</th><th>รายการ / รายละเอียด</th><th>จำนวน</th><th>หน่วย</th><th>ราคา/หน่วย</th><th>จำนวนเงิน</th></tr></thead><tbody>${rows}</tbody></table>
   <div class="sum"><div class="line"><span>รวม</span><b>${money(d.total)}</b></div><div class="line"><span>หัก ณ ที่จ่าย</span><b>${money(wht)}</b></div><div class="line" style="font-size:15px;border-top:1px solid #aaa"><span>ยอดสุทธิ</span><b>${money(Number(d.total)-wht)}</b></div></div>
@@ -1750,29 +1738,21 @@ function printDocument(id){
   <div class="doc-print-footer">
   ${bankInfo}<div class="box"><b>หมายเหตุ</b><div style="min-height:28px;white-space:pre-wrap">${esc(d.notes||s.docNote||'')}</div></div>
   <div class="sign"><div>ลงชื่อ ____________________<br>ผู้จัดทำ/ผู้รับเงิน</div><div>ลงชื่อ ____________________<br>ผู้อนุมัติ/ผู้ชำระเงิน</div></div>
-  ${LH.f1}</div></div>${LH.wrapClose}<script>window.onload=()=>{window.print()}<\/script></body></html>`;
+  </div></div><script>window.onload=()=>{window.print()}<\/script></body></html>`;
   const w=window.open('','_blank','width=900,height=700');w.document.write(html2);w.document.close();
 }
 function v(id){return document.getElementById(id)?.value??''}
-function lhParts(type){const s=db.settings||{},en=(s.lhTypes||{})[type]!==false,H=en&&s.lhHead,F=en&&s.lhFoot,g=Number(s.lhGap??6),all=s.lhPages==='all'&&(H||F);
-  const hi=H?`<img src="${H}" style="display:block;width:100%;margin:0 0 ${g}mm">`:'',fi=F?`<img src="${F}" style="display:block;width:100%;margin:${g}mm 0 0">`:'';
-  return {hideCo:!!H&&s.lhHideCo!==false,
-    css:all?'.doc-print{min-height:0}.lh-wrap{width:100%}.lh-wrap>thead>tr>td,.lh-wrap>tbody>tr>td,.lh-wrap>tfoot>tr>td{border:0;padding:0}':'',
-    wrapOpen:all?`<table class="lh-wrap"><thead><tr><td>${hi}</td></tr></thead><tbody><tr><td>`:'',
-    wrapClose:all?`</td></tr></tbody><tfoot><tr><td>${fi}</td></tr></tfoot></table>`:'',
-    h1:all?'':hi,f1:all?'':fi}}
-function lhPick(key,inp){const f=inp.files[0];if(!f)return;const img=new Image(),u=URL.createObjectURL(f);
-  img.onload=()=>{let w=Math.min(1240,img.width),q=.82,out='';
-    for(let i=0;i<8;i++){const c=document.createElement('canvas');c.width=w;c.height=Math.round(img.height*w/img.width);const x=c.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,c.width,c.height);x.drawImage(img,0,0,c.width,c.height);out=c.toDataURL('image/jpeg',q);if(out.length<140000)break;q=Math.max(.5,q-.08);w=Math.round(w*.9)}
-    URL.revokeObjectURL(u);db.settings={...db.settings,[key]:out};saveDB();inp.value=''};
+function logoImg(){const s=db.settings||{};return s.logo?`<img src="${s.logo}" style="height:${Number(s.logoH||18)}mm;width:auto;max-width:60mm;object-fit:contain;display:block">`:''}
+function logoPick(inp){const f=inp.files[0];if(!f)return;const img=new Image(),u=URL.createObjectURL(f);
+  img.onload=()=>{let m=600,out='';
+    for(let i=0;i<6;i++){const k=Math.min(1,m/Math.max(img.width,img.height)),c=document.createElement('canvas');c.width=Math.round(img.width*k);c.height=Math.round(img.height*k);const x=c.getContext('2d');x.drawImage(img,0,0,c.width,c.height);out=c.toDataURL('image/png');
+      if(out.length>90000){x.globalCompositeOperation='destination-over';x.fillStyle='#fff';x.fillRect(0,0,c.width,c.height);out=c.toDataURL('image/jpeg',.85)}
+      if(out.length<90000)break;m=Math.round(m*.8)}
+    URL.revokeObjectURL(u);db.settings={...db.settings,logo:out};saveDB();inp.value=''};
   img.onerror=()=>alert('เปิดรูปนี้ไม่ได้ ลองบันทึกเป็น PNG หรือ JPG');img.src=u}
-function lhClear(key){db.settings={...db.settings,[key]:''};saveDB()}
-function lhSave(){const t={};['QT','IV','BL','RE'].forEach(k=>t[k]=document.getElementById('lhT_'+k).checked);
-  db.settings={...db.settings,lhTypes:t,lhPages:v('lhPages'),lhGap:Number(v('lhGap')||0),lhHideCo:document.getElementById('lhHideCo').checked};saveDB();alert('บันทึกหัวกระดาษแล้ว')}
-function lhFill(){const s=db.settings||{};['lhHead','lhFoot'].forEach(k=>{const e=document.getElementById(k+'Prev');if(e){e.src=s[k]||'';e.style.display=s[k]?'block':'none'}});
-  const t=s.lhTypes||{};['QT','IV','BL','RE'].forEach(k=>{const e=document.getElementById('lhT_'+k);if(e)e.checked=t[k]!==false});
-  const p=document.getElementById('lhPages');if(p)p.value=s.lhPages||'first';const g=document.getElementById('lhGap');if(g)g.value=s.lhGap??6;const h=document.getElementById('lhHideCo');if(h)h.checked=s.lhHideCo!==false}
-
+function logoClear(){db.settings={...db.settings,logo:''};saveDB()}
+function logoSize(){db.settings={...db.settings,logoH:Math.min(40,Math.max(8,Number(v('logoH')||18)))};saveDB()}
+function logoFill(){const s=db.settings||{},p=document.getElementById('logoPrev');if(p){p.src=s.logo||'';p.style.display=s.logo?'block':'none'}const h=document.getElementById('logoH');if(h&&document.activeElement!==h)h.value=s.logoH||18}
 /* ===== v4.5 Google Sheet Sync + PWA ===== */
 const SYNC_CFG='abm_sync_cfg',SYNC_ST='abm_sync_state';
 const jget=(k,d)=>{try{return JSON.parse(localStorage.getItem(k))||d}catch(e){return d}};
