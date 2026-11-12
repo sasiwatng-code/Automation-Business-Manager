@@ -30,7 +30,10 @@ function writeAll(ss,d){const kv={},old=ss.getSheetByName('_kv');
   Object.keys(d).forEach(k=>{const v=d[k];
     if(Array.isArray(v))writeTable(ss,k,v.map(x=>({cols:flat(x),js:chunks(JSON.stringify(x))})));
     else kv[k]=JSON.stringify(v)});
-  writeTable(ss,'_kv',Object.keys(kv).map(k=>({cols:{key:k},js:chunks(kv[k])})))} // อัปเดตเฉพาะ key ที่ส่งมา ที่เหลือคงเดิม
+  writeTable(ss,'_kv',Object.keys(kv).map(k=>({cols:{key:k},js:chunks(kv[k])})))
+  if(d.settings&&typeof d.settings==='object')view(ss,'settings_view',d.settings)}
+/* แผ่นอ่านง่าย (อ่านอย่างเดียว ไม่ถูกดึงกลับเข้าแอป) */
+function view(ss,name,o){const rows=[['field','value']].concat(Object.keys(o).map(f=>[f,String(o[f]).slice(0,200)])),sh=sheet(ss,name);sh.clear();sh.getRange(1,1,rows.length,2).setNumberFormat('@').setValues(rows)} // อัปเดตเฉพาะ key ที่ส่งมา ที่เหลือคงเดิม
 function readAll(ss){const d={};
   ss.getSheets().forEach(sh=>{const n=sh.getName();if(n==='_meta')return;const v=sh.getDataRange().getValues();if(!v.length)return;
     const jc=[];v[0].forEach((h,i)=>{if(String(h).indexOf('_json')===0)jc.push(i)});if(!jc.length)return;
